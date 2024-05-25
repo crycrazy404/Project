@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pptxreader.HelloController">
+   <top>
+      <TabPane prefHeight="90.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="Edit">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <GridPane alignment="CENTER" layoutX="7.0" layoutY="13.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                               <Button fx:id="pencilButton" mnemonicParsing="false" onAction="#onPencilButtonClick">
+                                   <graphic>
+                                       <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                           <image>
+                                               <Image url="@../../../icos/pencil.png" />
+                                           </image>
+                                       </ImageView>
+                                   </graphic>
+                               </Button>
+                               <Button fx:id="highlightButton" mnemonicParsing="false" onAction="#onMarkerButtonClick" GridPane.columnIndex="1">
+                                   <graphic>
+                                       <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                           <image>
+                                               <Image url="@../../../icos/marker.png" />
+                                           </image>
+                                       </ImageView>
+                                   </graphic>
+                               </Button>
+                               <Button fx:id="eraiserButton" mnemonicParsing="false" onAction="#onEraserButtonClick" GridPane.columnIndex="2">
+                                   <graphic>
+                                       <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                           <image>
+                                               <Image url="@../../../icos/eraiser.png" />
+                                           </image>
+                                       </ImageView>
+                                   </graphic>
+                               </Button>
+                               <Button mnemonicParsing="false" onAction="#onSendButtonClick" GridPane.columnIndex="3">
+                                   <graphic>
+                                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                           <Image url="@../../../icos/mail.png" />
+                                       </image>
+                                   </ImageView>
+                                   </graphic>
+                               </Button>
+                               <Button mnemonicParsing="false" onAction="#onModalButtonClick" GridPane.columnIndex="4">
+                                   <graphic>
+                                       <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                           <image>
+                                               <Image url="@../../../icos/edit.png" />
+                                           </image>
+                                       </ImageView>
+                                   </graphic>
+                               </Button>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Settings">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="40.0" prefWidth="600.0">
+                     <children>
+                        <GridPane layoutY="16.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onPptxOpenButtonClick" text="Select" />
+                              <Button mnemonicParsing="false" onAction="#onBotStartButtonClick" text="Bot" GridPane.columnIndex="1" />
+                              <Button mnemonicParsing="false" text="Button" GridPane.columnIndex="2" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </top>
+   <bottom>
+      <GridPane alignment="BOTTOM_CENTER" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" onAction="#onPrevButtonClick" text="Previous" />
+            <Button mnemonicParsing="false" onAction="#onNextButtonClick" text="Next" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
+   </bottom>
+   <center>
+      <StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="845.0" prefWidth="1498.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="imgView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+            <Canvas fx:id="drawCanvas" height="200.0" width="200.0" />
+         </children></StackPane>
+   </center>
+</BorderPane>
