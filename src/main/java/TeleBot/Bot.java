@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bot extends TelegramLongPollingBot{
-    final private String BOT_TOKEN = "123";
+    final private String BOT_TOKEN = "BOT_TOKEN";
 
-    final private String BOT_NAME = "123";
+    final private String BOT_NAME = "BOT_NAME";
 
-    final private String CHAT_ID = "123";
+    final private String CHAT_ID = "CHAT_ID";
 
 
     @Override
