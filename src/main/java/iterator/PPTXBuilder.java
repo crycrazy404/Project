@@ -13,7 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public class PPTXBuilder implements Aggregate {
 
     private List<XSLFSlide> slides;
-    private final Lock lock = new ReentrantLock(); // Создаем объект блокировки
 
     public PPTXBuilder(String path) throws FileNotFoundException {
         try {
@@ -59,13 +58,11 @@ public class PPTXBuilder implements Aggregate {
 
         @Override
         public XSLFSlide Next() {
-
             if (hasNext()) return slides.get(++count);
             else{
                 count = 0;
                 return slides.get(count);
             }
-
         }
 
         @Override

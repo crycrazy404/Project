@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
@@ -39,28 +40,42 @@ public class HelloController{
     Button pencilButton;
     @FXML
     Canvas drawCanvas;
-
+    @FXML
+    Button nextButton;
+    @FXML
+    Button prevButton;
     public PPTXBuilder pptxBuild;
     public Iterator imgIter;
-
     GraphicsContext gc;
-    private DrawElement currentTool;
     private BufferedImage image = new BufferedImage(960,540, BufferedImage.TYPE_INT_ARGB);
     private final TextParser textParser = new TextParser();
+    private final Factory drawFactory = new Factory();
     Bot bot;
 
     public void onNextButtonClick(){
         imgIter.Next().draw(image.createGraphics());
         Image fxImage = SwingFXUtils.toFXImage(image, null);
         imgView.setImage(fxImage);
+        drawCanvas.getGraphicsContext2D().clearRect(0,0, drawCanvas.getWidth(), drawCanvas.getHeight());
     }
     public void onPrevButtonClick(){
         imgIter.Prev().draw(image.createGraphics());
         Image fxImage = SwingFXUtils.toFXImage(image, null);
         imgView.setImage(fxImage);
+        drawCanvas.getGraphicsContext2D().clearRect(0,0, drawCanvas.getWidth(), drawCanvas.getHeight());
     }
 
     public void onPptxOpenButtonClick(){
+        openPPTXFIle();
+        imgIter.getSlide(0).draw(image.createGraphics());
+        Image fxImage = SwingFXUtils.toFXImage(image, null);
+        imgView.setImage(fxImage);
+        drawCanvas.setDisable(false);
+        prevButton.setDisable(false);
+        nextButton.setDisable(false);
+        gc = drawCanvas.getGraphicsContext2D();
+    }
+    private void openPPTXFIle(){
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PowerPoint Presentations", "*.pptx"));
         File selectedFile = fileChooser.showOpenDialog(mainPane.getScene().getWindow());
@@ -74,48 +89,30 @@ public class HelloController{
         } else {
             System.out.println("Выбор файла отменен");
         }
-        imgIter.getSlide(0).draw(image.createGraphics());
-        Image fxImage = SwingFXUtils.toFXImage(image, null);
-        imgView.setFitWidth(1500);
-        imgView.setFitHeight(848);
-        drawCanvas.setWidth(1500);
-        drawCanvas.setHeight(848);
-        imgView.setImage(fxImage);
-        mainPane.setAlignment(imgView, Pos.CENTER);
-        mainPane.setAlignment(drawCanvas, Pos.CENTER);
-        gc = drawCanvas.getGraphicsContext2D();
     }
-
     public void onPencilButtonClick(){
-        setCurrentTool("pencil");
+        setCurrentTool(0);
     }
     public void onMarkerButtonClick(){
-        setCurrentTool("highlighter");
+        setCurrentTool(1);
     }
     public void onEraserButtonClick(){
-        setCurrentTool("eraser");
+        setCurrentTool(2);
     }
 
 
-    private void setCurrentTool(String toolType) {
-        currentTool = Factory.createTool(toolType);
+    private void setCurrentTool(Integer toolType) {
+        drawFactory.getElement(toolType);
         drawCanvas.setOnMousePressed(e -> {
             gc.beginPath();
-            if (currentTool instanceof Eraser) {
-                (currentTool).draw(gc, e.getX(), e.getY());
-            } else {
-                currentTool.draw(gc, e.getX(), e.getY());
-            }
+            drawFactory.getElement(toolType).setXY(e.getX(), e.getY());
+            drawFactory.getElement(toolType).draw(gc);
             gc.lineTo(e.getX(), e.getY());
             gc.stroke();
         });
         drawCanvas.setOnMouseDragged(e -> {
-            if (currentTool instanceof Eraser) {
-                (currentTool).draw(gc, e.getX(), e.getY());
-            } else {
-                gc.lineTo(e.getX(), e.getY());
-                gc.stroke();
-            }
+            drawFactory.getElement(toolType).setXY(e.getX(), e.getY());
+            drawFactory.getElement(toolType).draw(gc);
         });
         drawCanvas.setOnMouseReleased(e -> gc.closePath());
     }
@@ -139,20 +136,38 @@ public class HelloController{
         repaint();
     }
 
-    private BufferedImage saveImage(){
-        String filePath = "src/main/resources/snapshots/snapshot_" + (imgIter.getCurrent() + 1) +".png";
-        WritableImage stackPaneImage = new WritableImage( (int) mainPane.getBoundsInParent().getWidth(), (int) mainPane.getBoundsInParent().getHeight());
-        mainPane.snapshot(null, stackPaneImage);
-        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(stackPaneImage, null);
-        File file = new File(filePath);
-        try {
-            ImageIO.write(bufferedImage, "png", file);
-            System.out.println("Файл успешно сохранен: " + filePath);
+    private BufferedImage saveImage() {
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setTitle("Выберите папку для сохранения");
+        dc.setInitialDirectory(new File(System.getProperty("user.home")));
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        File selectedDirectory = dc.showDialog(null);
+
+        if (selectedDirectory != null) {
+            String fileName = "snapshot_" + (imgIter.getCurrent() + 1) + ".png";
+            File file = new File(selectedDirectory, fileName);
+
+            WritableImage stackPaneImage = new WritableImage((int) mainPane.getBoundsInParent().getWidth(), (int) mainPane.getBoundsInParent().getHeight());
+            mainPane.snapshot(null, stackPaneImage);
+            BufferedImage bufferedImage = SwingFXUtils.fromFXImage(stackPaneImage, null);
+            try {
+                ImageIO.write(bufferedImage, "png", file);
+                return bufferedImage;
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ошибка");
+                alert.setHeaderText("Файл не сохранен");
+                alert.setContentText("Возникла ошибка при сохранении файла! Попробуйте сохранить его еще раз.");
+                alert.showAndWait();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Ошибка");
+            alert.setHeaderText("Файл не сохранен");
+            alert.setContentText("Папка не выбрана");
+            alert.showAndWait();
         }
-        return bufferedImage;
+        return null;
     }
 
     private void repaint(){
