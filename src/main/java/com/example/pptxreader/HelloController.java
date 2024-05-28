@@ -6,7 +6,6 @@ import editor.*;
 import iterator.Iterator;
 import iterator.PPTXBuilder;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -21,7 +20,6 @@ import javafx.scene.image.ImageView;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 import parser.TextEditorPopUp;
 import parser.TextParser;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -67,13 +65,15 @@ public class HelloController{
 
     public void onPptxOpenButtonClick(){
         openPPTXFIle();
-        imgIter.getSlide(0).draw(image.createGraphics());
-        Image fxImage = SwingFXUtils.toFXImage(image, null);
-        imgView.setImage(fxImage);
-        drawCanvas.setDisable(false);
-        prevButton.setDisable(false);
-        nextButton.setDisable(false);
-        gc = drawCanvas.getGraphicsContext2D();
+        if(imgIter != null){
+            imgIter.getSlide(0).draw(image.createGraphics());
+            Image fxImage = SwingFXUtils.toFXImage(image, null);
+            imgView.setImage(fxImage);
+            drawCanvas.setDisable(false);
+            prevButton.setDisable(false);
+            nextButton.setDisable(false);
+            gc = drawCanvas.getGraphicsContext2D();
+        }
     }
     private void openPPTXFIle(){
         FileChooser fileChooser = new FileChooser();
@@ -84,10 +84,18 @@ public class HelloController{
                 pptxBuild = new PPTXBuilder(selectedFile.getAbsolutePath());
                 imgIter = pptxBuild.getIterator();
             } catch (FileNotFoundException e) {
-                System.out.println("Файл не найден");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ошибка");
+                alert.setHeaderText("Не удалось открыть файл");
+                alert.setContentText("Не удалось открыть файл " + selectedFile.getName());
+                alert.showAndWait();
             }
         } else {
-            System.out.println("Выбор файла отменен");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Информация");
+            alert.setHeaderText("Файл не выбран");
+            alert.setContentText("Пожалуйста выберите файл");
+            alert.showAndWait();
         }
     }
     public void onPencilButtonClick(){

@@ -5,12 +5,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Eraser extends DrawElement{
-    double ERASER_SIZE = 20.0;
-    double x,y;
+    private double x,y;
+    private double thickness = 20;
     Color color;
     @Override
     public void draw(GraphicsContext gc) {
-        gc.clearRect(x - ERASER_SIZE / 2, y - ERASER_SIZE / 2, ERASER_SIZE, ERASER_SIZE);
+        gc.clearRect(x - thickness / 2, y - thickness / 2, thickness, thickness);
     }
 
     @Override
@@ -22,5 +22,10 @@ public class Eraser extends DrawElement{
     public void setXY(double x, double y) {
         this.x = x;
         this.y = y;
+    }
+
+    @Override
+    public void setThickness(double thickness) {
+        this.thickness = thickness;
     }
 }

@@ -6,6 +6,7 @@ module com.example.pptxreader {
     requires javafx.swing;
     requires telegrambots;
     requires telegrambots.meta;
+    requires java.dotenv;
 
 
     opens com.example.pptxreader to javafx.fxml;

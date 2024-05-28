@@ -4,13 +4,12 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-
+import io.github.cdimascio.dotenv.Dotenv;
 import javax.imageio.ImageIO;
 
 import java.awt.image.BufferedImage;
@@ -21,11 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bot extends TelegramLongPollingBot{
-    final private String BOT_TOKEN = "7178572537:AAESfyOwZOmYnU5DlDH7-83k758_dCBOR6Y";
+    Dotenv env = Dotenv.load();
+    final private String BOT_TOKEN = env.get("BOT_TOKEN");
 
-    final private String BOT_NAME = "pptxEdit_bot";
+    final private String BOT_NAME = env.get("BOT_NAME");
 
-    final private String CHAT_ID = "777355496";
+    final private String CHAT_ID = env.get("CHAT_ID");
 
 
     @Override

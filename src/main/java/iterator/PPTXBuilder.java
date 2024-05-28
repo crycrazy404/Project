@@ -4,11 +4,8 @@ import org.apache.poi.xslf.usermodel.XSLFSlide;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class PPTXBuilder implements Aggregate {
 

@@ -2,8 +2,6 @@ package iterator;
 
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 
-import java.util.List;
-
 public interface Iterator {
 
     public XSLFSlide getSlide(int index);
